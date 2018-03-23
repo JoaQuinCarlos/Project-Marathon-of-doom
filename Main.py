@@ -2,15 +2,9 @@ import datetime
 import math as ma
 import scipy as sp
 import matplotlib.pyplot as pl
+import matplotlib.dates as plDates
 
-
-class Run:
-    def __init__(self, date, time, distance, kilometers):
-        self.date = date
-        self.time = time
-        self.distance = distance
-        self.kilometers = kilometers
-
+from run.Run import Run
 
 l1 = Run(datetime.date(2018, 3, 9), 4309, 10.74, [372, 363, 361, 367, 369, 394, 450, 422, 441, 486, 386])
 l2 = Run(datetime.date(2018, 3, 16), 4024, 10.78, [363, 363, 362, 368, 365, 382, 421, 384, 394, 345, 356])
@@ -30,31 +24,34 @@ for obj in LongRuns:
     totDist += obj.distance
     totTime += obj.time
 pl.show()
-for obj in ShortRuns:
-    pl.plot(obj.kilometers)
-    totDist += obj.distance
-    totTime += obj.time
-pl.show()
+# for obj in ShortRuns:
+#     pl.plot(obj.kilometers)
+#     totDist += obj.distance
+#     totTime += obj.time
+# pl.show()
 
 LongDates = []
 LongTimes = sp.zeros(len(LongRuns))
 for i in range(0, len(LongRuns)):
-    # LongDates[i] = LongRuns[i].date
+    LongDates.append(LongRuns[i].date)
     LongTimes[i] = LongRuns[i].time
 
-pl.plot(LongTimes)
+pl.gca().xaxis.set_major_formatter(plDates.DateFormatter("%d/%m/%Y"))
+pl.gca().xaxis.set_major_locator(plDates.DayLocator())
+pl.gcf().autofmt_xdate()
+pl.plot(LongDates, LongTimes)
 pl.show()
 
 # ShortDates = sp.zeros(len(LongRuns))
-ShortTimes = sp.zeros(len(LongRuns))
-for i in range(0, len(ShortRuns)):
-    # LongDates[i] = LongRuns[i].date
-    ShortTimes[i] = ShortRuns[i].time
+# ShortTimes = sp.zeros(len(LongRuns))
+# for i in range(0, len(ShortRuns)):
+#     ShortDates[i] = ShortRuns[i].date
+#     ShortTimes[i] = ShortRuns[i].time
 
-pl.plot(ShortTimes)
-pl.show()
+# pl.plot(ShortDates, ShortTimes)
+# pl.show()
 
-hours = ma.floor(totTime / 3600)
-minutes = ma.floor((totTime - 3600 * hours) / 60)
-seconds = totTime - 3600 * hours - 60 * minutes
-print("Distance:", totDist, "km", "\n", "Time:", hours, "hours", minutes, "minutes", seconds, "seconds", "\n", "Avg speed:", totDist * 3600 / totTime, "km/h")
+# hours = ma.floor(totTime / 3600)
+# minutes = ma.floor((totTime - 3600 * hours) / 60)
+# seconds = totTime - 3600 * hours - 60 * minutes
+# print("Distance:", totDist, "km", "\n", "Time:", hours, "hours", minutes, "minutes", seconds, "seconds", "\n", "Avg speed:", totDist * 3600 / totTime, "km/h")
