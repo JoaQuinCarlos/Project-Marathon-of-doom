@@ -79,11 +79,28 @@ for run in ShortRuns:
     ShortTimes.append(run.time)
 
 # --- Short Run Plot 2 ---
-pl.xticks(rotation=90)
-pl.plot(ShortDates, ShortTimes)
+fig, ax = pl.subplots()
+ax.plot(ShortDates, ShortTimes)
+
+# Format date x-axis labels.
+ax.xaxis.set_major_locator(mdates.MonthLocator())
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%Y"))
+ax.xaxis.set_minor_locator(mdates.DayLocator())
+ax.xaxis.set_minor_formatter(mdates.DateFormatter("%d"))
+
+# Format time y-axis labels.
+ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos:
+                                           '{:02d}:{:02d}:{:02d}'.format(
+                                               int(x / 3600),
+                                               int((x / 60) % 60),
+                                               int(x % 60))))
+
 pl.title("Short run")
 pl.xlabel("Date")
-pl.ylabel("Total time (s)")
+pl.ylabel("Total time (hh:mm:ss)")
+
+fig.autofmt_xdate()
+
 pl.show()
 
 # - Misc. Data Print -
