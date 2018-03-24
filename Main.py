@@ -1,7 +1,8 @@
 import datetime
 import math as ma
-import scipy as sp
 import matplotlib.pyplot as pl
+import matplotlib.dates as mdates
+from matplotlib.ticker import FuncFormatter
 
 from run.Run import Run
 
@@ -18,43 +19,66 @@ ShortRuns = [s1, s2, s3]
 totDist = 0
 totTime = 0
 
-for obj in LongRuns:
-    pl.plot(obj.kilometers)
-    totDist += obj.distance
-    totTime += obj.time
+# --- Long Run Plot ---
+for run in LongRuns:
+    pl.plot(run.kilometers)
+    totDist += run.distance
+    totTime += run.time
 pl.title("Long run")
 pl.xlabel("Kilometer")
 pl.ylabel("Time per kilometer (s)")
 pl.show()
 
-for obj in ShortRuns:
-    pl.plot(obj.kilometers)
-    totDist += obj.distance
-    totTime += obj.time
+# --- Short Run Plot ---
+for run in ShortRuns:
+    pl.plot(run.kilometers)
+    totDist += run.distance
+    totTime += run.time
 pl.title("Short run")
 pl.xlabel("Kilometer")
 pl.ylabel("Time per kilometer (s)")
 pl.show()
 
+# - Build Data for Long Run Plot 2 -
 LongDates = []
-LongTimes = sp.zeros(len(LongRuns))
-for i in range(0, len(LongRuns)):
-    LongDates.append(LongRuns[i].date)
-    LongTimes[i] = LongRuns[i].time
+LongTimes = []
+for run in LongRuns:
+    LongDates.append(run.date)
+    LongTimes.append(run.time)
 
-pl.xticks(rotation=90)
-pl.plot(LongDates, LongTimes)
+# --- Long Run Plot 2 ---
+fig, ax = pl.subplots()
+ax.plot(LongDates, LongTimes)
+
+# Format date x-axis labels.
+ax.xaxis.set_major_locator(mdates.MonthLocator())
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%Y"))
+ax.xaxis.set_minor_locator(mdates.DayLocator())
+ax.xaxis.set_minor_formatter(mdates.DateFormatter("%d"))
+
+# Format time y-axis labels.
+ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos:
+                                           '{:02d}:{:02d}:{:02d}'.format(
+                                               int(x / 3600),
+                                               int((x / 60) % 60),
+                                               int(x % 60))))
+
 pl.title("Long run")
 pl.xlabel("Date")
-pl.ylabel("Total time (s)")
+pl.ylabel("Total time (hh:mm:ss)")
+
+fig.autofmt_xdate()
+
 pl.show()
 
+# - Build Data for Short Run Plot 2 -
 ShortDates = []
-ShortTimes = sp.zeros(len(LongRuns))
-for i in range(0, len(ShortRuns)):
-    ShortDates.append(LongRuns[i].date)
-    ShortTimes[i] = ShortRuns[i].time
+ShortTimes = []
+for run in ShortRuns:
+    ShortDates.append(run.date)
+    ShortTimes.append(run.time)
 
+# --- Short Run Plot 2 ---
 pl.xticks(rotation=90)
 pl.plot(ShortDates, ShortTimes)
 pl.title("Short run")
@@ -62,6 +86,7 @@ pl.xlabel("Date")
 pl.ylabel("Total time (s)")
 pl.show()
 
+# - Misc. Data Print -
 hours = ma.floor(totTime / 3600)
 minutes = ma.floor((totTime - 3600 * hours) / 60)
 seconds = totTime - 3600 * hours - 60 * minutes
