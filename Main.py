@@ -14,7 +14,8 @@ LongRuns = [l1, l2, l3]
 s1 = Run(datetime.date(2018, 3, 14), 2039, 5.77, [304, 331, 330, 385, 426, 340])
 s2 = Run(datetime.date(2018, 3, 19), 1990, 5.68, [313, 327, 345, 382, 400, 329])
 s3 = Run(datetime.date(2018, 3, 21), 1953, 5.68, [288, 321, 337, 389, 391, 333])
-ShortRuns = [s1, s2, s3]
+s4 = Run(datetime.date(2018, 4, 1), 2255, 5.68, [317, 329, 366, 428, 600, 317])
+ShortRuns = [s1, s2, s3, s4]
 
 totDist = 0
 totTime = 0
